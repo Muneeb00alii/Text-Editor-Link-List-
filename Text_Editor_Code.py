@@ -41,50 +41,8 @@ class TextEditor:
         self.Row = 0
         self.Col = 0
 
-    def goto_1(self, Row, Col):
-        # print(Row, Col)
-        # print("Goto Call",goto_call)
-        # print("Total Lines: ", self.Total_Lines)
-        # print("1 Call")
-
-        while self.Total_Lines < Row:
-            self.doc.insert_at_end('\n')
-            self.Total_Lines += 1
-
-        Current_Line = self.doc.head
-        for i in range(Row-1):
-            if Current_Line.next is None:
-                break
-            Current_Line = Current_Line.next
-        self.Pointer_Line = Current_Line
-        self.Row = Row
-
-        try:
-            i = self.Pointer_Line.characters
-        except AttributeError:
-            self.Pointer_Line.characters = DLL()
-            self.Pointer_Char = self.Pointer_Line.characters.head
-            self.Col = 1
-
-        for j in range(Col - 1):
-            if self.Pointer_Char is None:
-                break
-            self.Pointer_Char = self.Pointer_Char.next
-            self.Col = self.Col +1
-
-        if self.Pointer_Char is None:
-            characters_1 = self.Pointer_Line.characters
-            while len(characters_1) < Col:
-                characters_1.insert_at_end(' ')
-            self.Pointer_Char = characters_1.tail
-        self.Col = Col
-
-
+    
     def goto(self, Row, Col):
-        # print(Row, Col)
-        # print("Goto Call",goto_call)
-        
-        Row = Row + goto_call
 
         while self.Total_Lines < Row:
             self.doc.insert_at_end('\n')
@@ -228,14 +186,9 @@ class TextEditor:
 
         self.printDoc()
     
-    def countLines_1(self):
+    def countLines(self):
         return self.Total_Lines
 
-    def countLines(self):
-        tl = self.Total_Lines
-        tl = tl - 1
-        return tl
-    
     def countCharacters(self):
         # return len(self.doc)
         count = 0
@@ -395,11 +348,12 @@ def main():
                     print("Invalid Row or Col! Please Try Again.")
 
                 if goto_call == 0:
-                    text_editor.goto_1((row), (col))
+                    text_editor.goto((row), (col))
                     goto_call = goto_call + 1
 
                 else:
                     cl_call = cl_call + 1
+                    row = row + goto_call
                     text_editor.goto((row), (col))
                     goto_call = goto_call + 1
 
@@ -432,10 +386,11 @@ def main():
 
             elif command.lower() == "countLines" or command.lower() == "cl" or command == "8":
                 if cl_call == 0:
-                    print("Total Number of Lines are: ", text_editor.countLines_1())
+                    print("Total Number of Lines are: ", text_editor.countLines())
                     cl_call = cl_call + 1
 
                 elif cl_call > 0:
+                    text_editor.Total_Lines = text_editor.Total_Lines - 1
                     print("Total Number of Lines are: ", text_editor.countLines())
 
             elif command.lower() == "countCharacters" or command.lower() == "cc" or command == "9":
